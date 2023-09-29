@@ -18,4 +18,21 @@ https: module.exports = {
       throw new Error("Could not talk to data provider.");
     }
   },
+  fetchMoviesDetails: async function (movieId) {
+    const creditsUrl = `https://api.themoviedb.org/3/movie/${movieId}/credits?api_key=${process.env.API_KEY}`;
+    const fullInfoUrl = `https://api.themoviedb.org/3/movie/${movieId}?language=en-US&api_key=${process.env.API_KEY}`;
+    const options = {
+      method: "GET",
+      headers: { accept: "application/json" },
+    };
+    const allDetails = await Promise.all([
+      await fetch(creditsUrl, options),
+      await fetch(fullInfoUrl, options),
+    ]);
+
+    const cast_crew = await allDetails[0].json();
+    const movieInfo = await allDetails[1].json();
+
+    return { ...movieInfo, ...cast_crew };
+  },
 };

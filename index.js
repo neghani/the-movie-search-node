@@ -30,6 +30,17 @@ app.get("/find-movie", async (req, res) => {
   }
 });
 
+app.get("/movie-details/:id", async (req, res) => {
+  try {
+    let id = req.params.id;
+    const response = await fetchService.fetchMoviesDetails(id);
+    res.send(response);
+  } catch (error) {
+    res.statusCode = 422;
+    res.send({ error: error.message, success: false });
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}`);
 });
